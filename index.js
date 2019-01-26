@@ -88,4 +88,11 @@ addon.defineCatalogHandler((args, cb) => {
     cb(null, args.type === 'movie' && args.id === 'tktop10movies' ? { metas: top10 } : null)
 })
 
-addon.runHTTPWithOptions({ port: 7000 })
+const handler = addon.getServerlessHandler()
+
+module.exports = (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  handler(req, res)
+}
+
+addon.publishToCentral("https://top-10-torrentfreak.now.sh/manifest.json")
