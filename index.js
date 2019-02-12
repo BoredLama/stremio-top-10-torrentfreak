@@ -22,7 +22,15 @@ const getMeta = (imdbId, cb) => {
       })
 }
 
+let updateMetasTimer
+
 function updateMetas() {
+
+  if (updateMetasTimer) {
+    clearTimeout(updateMetasTimer)
+    updateMetasTimer = false
+  }
+
   const metas = []
 
   const metaQueue = async.queue((imdbId, cb) => {
@@ -33,7 +41,12 @@ function updateMetas() {
     })
   }, 1)
 
-  metaQueue.drain = () => { top10 = metas }
+  metaQueue.drain = () => {
+    top10 = metas
+
+    if (top10.length < oldImdbIds.length)
+      updateMetasTimer = setTimeout(updateMetas, 3600000) // try again in 1 hour
+  }
 
   oldImdbIds.forEach(imdbId => { metaQueue.push(imdbId) })
 }
@@ -65,27 +78,21 @@ const populate = async () => {
   	return
   }
 
-  oldImdbIds = imdbIds
-
-  updateMetas()
-
+  if (JSON.stringify(oldImdbIds) != JSON.stringify(imdbIds)) {
+    oldImdbIds = imdbIds
+    updateMetas()
+  }
 }
 
 populate()
 
 setInterval(populate, 172800000) // populate every 2 days
 
-// check cinemeta for new items every 6 hours
-setInterval(() => {
-  if (top10.length < oldImdbIds.length)
-    updateMetas()
-}, 21600000)
-
 const addonSDK = require('stremio-addon-sdk')
 
 const addon = new addonSDK({
     id: 'org.tftop10',
-    version: '0.0.2',
+    version: '0.0.3',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/TorrentFreak_logo.svg/982px-TorrentFreak_logo.svg.png',
     name: 'TorrentFreak Top 10 Movies',
     description: 'Add-on to show a Catalog for TorrenFreak\'s Weekly Top 10 Movies',
