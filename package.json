@@ -1,6 +1,6 @@
 {
   "name": "stremio-top-10-torrentfreak",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
@@ -10,6 +10,6 @@
     "cheerio": "^1.0.0-rc.2",
     "needle": "^2.2.4",
     "rss-parser": "^3.6.2",
-    "stremio-addon-sdk": "Stremio/stremio-addon-sdk#serverless"
+    "stremio-addon-sdk": "Stremio/stremio-addon-sdk#2f0ecb2ad03b777b1d305810d007f0f0e3fb7bb7"
   }
 }
