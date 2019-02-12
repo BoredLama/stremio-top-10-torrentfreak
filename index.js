@@ -10,9 +10,16 @@ let top10 = []
 let oldImdbIds = []
 
 const getMeta = (imdbId, cb) => {
-    needle.get('https://v3-cinemeta.strem.io/meta/movie/' + imdbId + '.json', (err, resp, body) => {
-        cb(body && body.meta ? body.meta : false)
+    const found = top10.some(meta => {
+      if (meta && meta.imdb_id && meta.imdb_id == imdbId) {
+        cb(meta)
+        return true
+      }
     })
+    if (!found)
+      needle.get('https://v3-cinemeta.strem.io/meta/movie/' + imdbId + '.json', (err, resp, body) => {
+        cb(body && body.meta ? body.meta : false)
+      })
 }
 
 function updateMetas() {
@@ -68,11 +75,11 @@ populate()
 
 setInterval(populate, 172800000) // populate every 2 days
 
-// check cinemeta for new items every 13 hours
+// check cinemeta for new items every 6 hours
 setInterval(() => {
   if (top10.length < oldImdbIds.length)
     updateMetas()
-}, 46800000)
+}, 21600000)
 
 const addonSDK = require('stremio-addon-sdk')
 
