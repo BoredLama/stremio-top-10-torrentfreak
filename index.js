@@ -114,4 +114,4 @@ addon.defineCatalogHandler((args, cb) => {
 
 addon.runHTTPWithOptions({ port: process.env.PORT || 7550 })
 
-module.exports = addon.getServerlessHandler()
+addon.publishToCentral("https://top-10-torrentfreak.herokuapp.com/manifest.json")
