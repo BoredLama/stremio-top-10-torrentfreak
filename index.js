@@ -112,4 +112,6 @@ addon.defineCatalogHandler((args, cb) => {
     cb(null, args.type === 'movie' && args.id === 'tktop10movies' ? { metas: top10 } : null)
 })
 
+addon.runHTTPWithOptions({ port: process.env.PORT || 7550 })
+
 module.exports = addon.getServerlessHandler()
