@@ -88,9 +88,9 @@ populate()
 
 setInterval(populate, 172800000) // populate every 2 days
 
-const addonSDK = require('stremio-addon-sdk')
+const { addonBuilder, serveHTTP, publishToCentral }  = require('stremio-addon-sdk')
 
-const addon = new addonSDK({
+const addon = new addonBuilder({
     id: 'org.tftop10',
     version: '0.0.3',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/TorrentFreak_logo.svg/982px-TorrentFreak_logo.svg.png',
@@ -108,10 +108,13 @@ const addon = new addonSDK({
     ]
 })
 
-addon.defineCatalogHandler((args, cb) => {
-    cb(null, args.type === 'movie' && args.id === 'tktop10movies' ? { metas: top10 } : null)
+addon.defineCatalogHandler(args => {
+    return new Promise((resolve, reject) => {
+      resolve({ metas: args.type === 'movie' && args.id === 'tktop10movies' ? top10 : [] })
+    })
 })
 
-addon.runHTTPWithOptions({ port: process.env.PORT || 7550 })
+// cache for 3 days
+serveHTTP(addon.getInterface(), { port: process.env.PORT || 7550, cache: 259200 })
 
-addon.publishToCentral("https://top-10-torrentfreak.herokuapp.com/manifest.json")
+publishToCentral("https://top-10-torrentfreak.herokuapp.com/manifest.json")
