@@ -2,19 +2,15 @@
 
 Adds a catalog to Stremio that shows Torrent Freak's Top 10 Weekly Movies.
 
-# Usage
+# Installing
 
 Install it from Stremio's add-on catalog, in the community add-ons section.
 
-# Testing
-
-This add-on uses a serverless implementation, you can test it with `now.sh` ([link](https://zeit.co/))
+# Programatic Usage
 
 ```
-git clone https://github.com/BoredLama/stremio-top-10-torrentfreak.git
-cd stremio-top-10-torrentfreak
-npm install -g now
-now
+npm i
+npm start
 ```
 
 This will reply with a link, add `/manifest.json` to the end of that link and use it in Stremio.
